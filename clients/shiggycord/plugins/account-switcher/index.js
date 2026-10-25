@@ -7,7 +7,7 @@
   const { React, ReactNative: RN } = V.metro.common;
   const { instead } = V.patcher;
   const { storage } = V.plugin;
-  const VERSION = "2.3.0-shiggy";
+  const VERSION = "2.5.1-shiggy";
 
   storage.onlyActiveNotifications ??= true;
 
@@ -17,8 +17,14 @@
     actions: null,
     pushActions: null,
     notificationTokenManager: null,
+    receiveNotificationModule: null,
+    rest: null,
     pushUnpatch: null,
+    receiveUnpatch: null,
     notificationStatus: "starting",
+    blockedNotifications: 0,
+    lastBlockedAt: 0,
+    lastBlockedUserId: "",
     lastNativeSyncAt: 0,
     lastNativeSyncKey: "",
     lastSuccessfulKey: "",
@@ -26,7 +32,9 @@
     pendingSync: false,
     pendingForce: false,
     startupTimer: null,
-    switchFallbackTimer: null,
+    switchRepairTimers: [],
+    lastDetachStatus: "none",
+    lastExplicitSyncStatus: "none",
     loaded: false,
   };
 
@@ -42,7 +50,15 @@
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   function toast(text) {
-    try { V.ui?.toasts?.showToast?.(String(text)); } catch {}
+    const value = String(text);
+    try {
+      const actions = V.metro?.common?.toasts;
+      if (typeof actions?.open === "function") {
+        actions.open(`its666-account-switcher-${Date.now()}`, { text: value });
+        return;
+      }
+    } catch {}
+    try { V.ui?.toasts?.showToast?.(value); } catch {}
   }
 
   function find(...props) {
@@ -97,6 +113,23 @@
       })
     );
 
+    if (!runtime.receiveNotificationModule) {
+      const module = findModule(candidate => {
+        const fn = candidate?.default;
+        if (typeof fn !== "function") return false;
+        if (fn.name === "receiveNotification") return true;
+        try { return String(fn).includes("receiving_user_id"); } catch { return false; }
+      });
+      if (module?.default && typeof module.default === "function") {
+        runtime.receiveNotificationModule = module;
+      }
+    }
+
+    runtime.rest ??= (
+      find("getAPIBaseURL", "get", "del", "post", "put")
+      ?? find("getAPIBaseURL", "get", "del", "post")
+    );
+
     return runtime;
   }
 
@@ -133,15 +166,74 @@
     return `${activeOnly ? "active" : "default"}:${accounts.join(",")}:${String(token ?? "")}`;
   }
 
-  function activePushSyncTokenReady() {
+  function activePushSyncToken() {
     resolveRuntime();
     const active = currentId();
-    if (!active) return false;
+    if (!active) return null;
     try {
       const users = runtime.multiAccountStore?.getValidUsers?.();
       const account = Array.isArray(users) ? users.find(user => entryId(user) === active) : null;
-      return !!account?.pushSyncToken;
+      return account?.pushSyncToken ?? null;
     } catch {
+      return null;
+    }
+  }
+
+  function activePushSyncTokenReady() {
+    return !!activePushSyncToken();
+  }
+
+  function pushProvider() {
+    return RN.Platform?.OS === "ios" ? "apns" : "gcm";
+  }
+
+  async function explicitActiveSync(deviceToken) {
+    resolveNotifications();
+    const rest = runtime.rest;
+    const syncToken = activePushSyncToken();
+    if (!deviceToken) throw new Error("Android push token unavailable");
+    if (!syncToken) throw new Error("active account push sync token unavailable");
+    if (typeof rest?.put !== "function") throw new Error("Discord REST PUT unavailable");
+
+    const response = await Promise.resolve(rest.put({
+      url: "/users/@me/devices/sync",
+      body: {
+        provider: pushProvider(),
+        token: String(deviceToken),
+        push_sync_tokens: [String(syncToken)],
+      },
+    }));
+
+    const invalid = response?.body?.invalid_push_sync_tokens;
+    if (Array.isArray(invalid) && invalid.map(String).includes(String(syncToken))) {
+      throw new Error("Discord rejected the active account push sync token");
+    }
+
+    runtime.lastExplicitSyncStatus = "ok";
+    return response;
+  }
+
+  async function unregisterCurrentDevice(deviceToken) {
+    resolveNotifications();
+    const rest = runtime.rest;
+    if (!deviceToken || typeof rest?.del !== "function") {
+      runtime.lastDetachStatus = "unavailable";
+      return false;
+    }
+
+    try {
+      const response = await Promise.resolve(rest.del({
+        url: "/users/@me/devices",
+        body: {
+          provider: pushProvider(),
+          token: String(deviceToken),
+        },
+      }));
+      const ok = syncResultSucceeded(response);
+      runtime.lastDetachStatus = ok ? "ok" : "failed";
+      return ok;
+    } catch {
+      runtime.lastDetachStatus = "failed";
       return false;
     }
   }
@@ -165,6 +257,90 @@
     runtime.pushUnpatch = null;
   }
 
+  function uninstallReceiveFilter() {
+    if (!runtime.receiveUnpatch) return;
+    try { runtime.receiveUnpatch(); } catch {}
+    runtime.receiveUnpatch = null;
+  }
+
+  function installReceiveFilter() {
+    if (storage.onlyActiveNotifications !== true) {
+      uninstallReceiveFilter();
+      return false;
+    }
+    if (runtime.receiveUnpatch) return true;
+
+    resolveNotifications();
+    const module = runtime.receiveNotificationModule;
+    if (!module || typeof module.default !== "function") return false;
+
+    runtime.receiveUnpatch = instead("default", module, (args, original) => {
+      if (storage.onlyActiveNotifications !== true) return original(...args);
+
+      const source = args?.[0];
+      const getter = source?.getData;
+      if (typeof getter !== "function") return original(...args);
+
+      let data;
+      try { data = getter.call(source); }
+      catch { return original(...args); }
+
+      const receivingId = data?.receiving_user_id;
+      const active = currentId();
+
+      // Fail open when Discord does not identify the receiving account.
+      // Only suppress a push when both IDs are explicit and they disagree.
+      if (receivingId != null && active && String(receivingId) !== active) {
+        runtime.blockedNotifications += 1;
+        runtime.lastBlockedAt = Date.now();
+        runtime.lastBlockedUserId = String(receivingId);
+        return false;
+      }
+
+      return original(...args);
+    });
+
+    return true;
+  }
+
+  function callOriginalActiveOnly(args, original) {
+    const store = runtime.multiAccountStore;
+    const active = currentId();
+    if (!active || typeof store?.getValidUsers !== "function") return original(...args);
+
+    const originalGetter = store.getValidUsers;
+    const ownDescriptor = Object.getOwnPropertyDescriptor(store, "getValidUsers");
+    const restore = () => {
+      try {
+        if (ownDescriptor) Object.defineProperty(store, "getValidUsers", ownDescriptor);
+        else delete store.getValidUsers;
+      } catch {}
+    };
+
+    try {
+      Object.defineProperty(store, "getValidUsers", {
+        configurable: true,
+        writable: true,
+        value: function getOnlyActiveUser() {
+          const users = originalGetter.call(store);
+          return Array.isArray(users)
+            ? users.filter(user => entryId(user) === active)
+            : users;
+        },
+      });
+
+      const result = original(...args);
+      if (result && typeof result.then === "function") {
+        return Promise.resolve(result).finally(restore);
+      }
+      restore();
+      return result;
+    } catch (error) {
+      restore();
+      throw error;
+    }
+  }
+
   function installPushPatch() {
     if (storage.onlyActiveNotifications !== true) {
       uninstallPushPatch();
@@ -174,8 +350,7 @@
 
     resolveNotifications();
     const pushActions = runtime.pushActions;
-    const store = runtime.multiAccountStore;
-    if (typeof pushActions?.syncDevice !== "function" || typeof store?.getValidUsers !== "function") {
+    if (typeof pushActions?.syncDevice !== "function") {
       runtime.notificationStatus = "waiting for Discord push modules";
       return false;
     }
@@ -184,36 +359,21 @@
       if (storage.onlyActiveNotifications !== true) return original(...args);
 
       const active = currentId();
-      if (!active) return original(...args);
+      const deviceToken = args?.[0] ?? getPushToken();
+      if (!active || !deviceToken) return original(...args);
 
-      const originalGetter = store.getValidUsers;
-      const ownDescriptor = Object.getOwnPropertyDescriptor(store, "getValidUsers");
-      let result;
-
-      try {
-        Object.defineProperty(store, "getValidUsers", {
-          configurable: true,
-          writable: true,
-          value: function getOnlyActiveUser() {
-            const users = originalGetter.call(store);
-            return Array.isArray(users)
-              ? users.filter(user => entryId(user) === active)
-              : users;
-          },
-        });
-
-        // Discord reads getValidUsers synchronously before its first await.
-        result = original(...args);
-      } finally {
-        try {
-          if (ownDescriptor) Object.defineProperty(store, "getValidUsers", ownDescriptor);
-          else delete store.getValidUsers;
-        } catch {}
-      }
-
-      const key = desiredSyncKey(true, args?.[0]);
+      const key = desiredSyncKey(true, deviceToken);
       runtime.lastNativeSyncAt = Date.now();
       runtime.lastNativeSyncKey = key;
+
+      let result;
+      if (typeof runtime.rest?.put === "function" && activePushSyncTokenReady()) {
+        result = explicitActiveSync(deviceToken);
+      } else {
+        // Fallback for builds where the REST PUT wrapper or sync token is not ready:
+        // keep the active-only account view in place for the entire native sync promise.
+        result = callOriginalActiveOnly(args, original);
+      }
 
       Promise.resolve(result)
         .then(response => {
@@ -221,7 +381,9 @@
           const tokenReady = !runtime.multiAccountStore?.canUseMultiAccountNotifications || activePushSyncTokenReady();
           if (syncResultSucceeded(response) && tokenReady) {
             runtime.lastSuccessfulKey = key;
-            runtime.notificationStatus = "active account only";
+            runtime.notificationStatus = typeof runtime.rest?.put === "function"
+              ? "active account locked"
+              : "active account synced";
           } else if (!tokenReady) {
             runtime.notificationStatus = "waiting for account push token";
           } else {
@@ -229,6 +391,7 @@
           }
         })
         .catch(error => {
+          runtime.lastExplicitSyncStatus = "failed";
           if (storage.onlyActiveNotifications === true) {
             runtime.notificationStatus = `sync failed: ${error?.message ?? error}`;
           }
@@ -241,8 +404,13 @@
   }
 
   function applyPatchForMode() {
-    if (storage.onlyActiveNotifications === true) return installPushPatch();
+    if (storage.onlyActiveNotifications === true) {
+      const push = installPushPatch();
+      const local = installReceiveFilter();
+      return push || local;
+    }
     uninstallPushPatch();
+    uninstallReceiveFilter();
     return true;
   }
 
@@ -262,7 +430,7 @@
 
     const key = desiredSyncKey(activeOnly, token);
     if (!force && runtime.lastSuccessfulKey === key) {
-      runtime.notificationStatus = activeOnly ? "active account only" : "Discord default";
+      runtime.notificationStatus = activeOnly ? "server sync complete" : "Discord default";
       return true;
     }
 
@@ -295,7 +463,7 @@
       }
 
       runtime.lastSuccessfulKey = key;
-      runtime.notificationStatus = activeOnly ? "active account only" : "Discord default";
+      runtime.notificationStatus = activeOnly ? "server sync complete" : "Discord default";
       return true;
     } catch (error) {
       runtime.notificationStatus = `sync failed: ${error?.message ?? error}`;
@@ -336,7 +504,11 @@
       if (wait) await sleep(wait);
       resolveNotifications();
       applyPatchForMode();
-      if (runtime.pushActions && getPushToken()) break;
+      if (
+        runtime.pushActions
+        && getPushToken()
+        && (storage.onlyActiveNotifications !== true || runtime.receiveUnpatch)
+      ) break;
     }
 
     if (storage.onlyActiveNotifications === true) {
@@ -347,21 +519,21 @@
     }
   }
 
-  function armSwitchFallback(targetId) {
-    if (runtime.switchFallbackTimer) clearTimeout(runtime.switchFallbackTimer);
-    const startedAt = Date.now();
+  function clearSwitchRepairs() {
+    for (const timer of runtime.switchRepairTimers.splice(0)) {
+      try { clearTimeout(timer); } catch {}
+    }
+  }
 
-    runtime.switchFallbackTimer = setTimeout(() => {
-      runtime.switchFallbackTimer = null;
-      if (!runtime.loaded || storage.onlyActiveNotifications !== true) return;
-      if (currentId() !== String(targetId)) return;
-
-      const key = desiredSyncKey(true);
-      const nativeSyncHappened = runtime.lastNativeSyncAt >= startedAt;
-      if (!nativeSyncHappened || runtime.lastSuccessfulKey !== key) {
+  function armSwitchRepairs(targetId) {
+    clearSwitchRepairs();
+    for (const wait of [500, 2500, 7000]) {
+      runtime.switchRepairTimers.push(setTimeout(() => {
+        if (!runtime.loaded || storage.onlyActiveNotifications !== true) return;
+        if (currentId() !== String(targetId)) return;
         requestSync(true).catch(() => {});
-      }
-    }, 8000);
+      }, wait));
+    }
   }
 
   function restoreDiscordNotifications() {
@@ -452,11 +624,26 @@
       throw new Error("Discord's multi-account switch action was not found");
     }
 
-    await Promise.resolve(fn(target, undefined));
+    const activeOnly = storage.onlyActiveNotifications === true;
+    const deviceToken = activeOnly ? getPushToken() : null;
 
-    // Discord normally re-syncs push registration on POST_CONNECTION_OPEN.
-    // This is only a bounded repair path if that native sync never happens.
-    if (storage.onlyActiveNotifications === true) armSwitchFallback(target);
+    // Detach the account we are leaving while it is still the authenticated account.
+    // This prevents its old FCM registration from surviving the switch.
+    if (activeOnly && deviceToken) {
+      runtime.notificationStatus = "detaching previous account";
+      await unregisterCurrentDevice(deviceToken);
+    }
+
+    try {
+      await Promise.resolve(fn(target, undefined));
+    } catch (error) {
+      // If the switch itself fails, restore notification registration for the
+      // account that remains active.
+      if (activeOnly) requestSync(true).catch(() => {});
+      throw error;
+    }
+
+    if (activeOnly) armSwitchRepairs(target);
   }
 
   function NotificationToggle({ refresh }) {
@@ -479,7 +666,7 @@
         React.createElement(RN.Text, {
           key: "desc",
           style: { color: C.muted, marginTop: 4, fontSize: 12, lineHeight: 17 },
-        }, "Keeps Android push registration on the active account while preserving Discord's native notification behavior."),
+        }, "Detaches the account you leave, locks server push sync to the active account, and keeps a local receiving-account guard as backup."),
         React.createElement(RN.Text, {
           key: "status",
           style: {
@@ -488,7 +675,7 @@
             fontSize: 11,
             lineHeight: 16,
           },
-        }, `Status: ${runtime.notificationStatus}`),
+        }, `Status: ${runtime.notificationStatus} • local:${runtime.receiveUnpatch ? "armed" : "waiting"}${runtime.blockedNotifications ? ` • blocked ${runtime.blockedNotifications}` : ""}`),
       ]),
       React.createElement(RN.Switch, {
         key: "switch",
@@ -501,8 +688,8 @@
           requestSync(true)
             .then(ok => {
               toast(ok
-                ? (value ? "Only active account will notify" : "Multi-account notifications restored")
-                : "Notification sync is waiting for Discord");
+                ? (value ? "Active-account protection enabled" : "Multi-account notifications restored")
+                : "Notification protection is waiting for Discord");
               refresh();
             })
             .catch(() => {});
@@ -609,7 +796,7 @@
     children.push(React.createElement(RN.Text, {
       key: "version",
       style: { color: C.muted, fontSize: 12, lineHeight: 17 },
-    }, `v${VERSION} • switch:${canSwitch ? "yes" : "no"} • notifications:${storage.onlyActiveNotifications === true ? "active-only" : "default"}`));
+    }, `v${VERSION} • switch:${canSwitch ? "yes" : "no"} • notifications:${storage.onlyActiveNotifications === true ? "active-only" : "default"} • local:${runtime.receiveUnpatch ? "armed" : "waiting"} • detach:${runtime.lastDetachStatus} • explicit-sync:${runtime.lastExplicitSyncStatus} • blocked:${runtime.blockedNotifications}`));
 
     return React.createElement(
       RN.ScrollView ?? RN.View,
@@ -631,9 +818,10 @@
     onUnload() {
       runtime.loaded = false;
       if (runtime.startupTimer) clearTimeout(runtime.startupTimer);
-      if (runtime.switchFallbackTimer) clearTimeout(runtime.switchFallbackTimer);
+      clearSwitchRepairs();
 
       // Removing the plugin must not leave Discord registered in active-only mode.
+      uninstallReceiveFilter();
       if (storage.onlyActiveNotifications === true) restoreDiscordNotifications();
       else uninstallPushPatch();
     },

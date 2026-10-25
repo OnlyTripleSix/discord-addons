@@ -8,11 +8,13 @@
   const { storage } = vendetta.plugin;
 
   const RUNTIME_KEY = "__itsTripleSixSilentTypingRuntime";
+  const TOAST_COMPAT_KEY = "__itsTripleSixShiggyToastCompat";
   const DEFAULT_VISIBLE_COLOR = "#B5BAC1";
   const DEFAULT_SILENT_COLOR = "#B5BAC1";
   const DEFAULT_SLASH_COLOR = "#F23F42";
   const DEFAULT_ALPHA = 255;
   const CONFIG_VERSION = 2;
+  const VERSION = "1.1.3-shiggy";
 
   try {
     globalThis[RUNTIME_KEY]?.cleanup?.();
@@ -24,14 +26,65 @@
     leftPatched: false,
     rightPatched: false,
     typingPatched: false,
+    fluxPatched: false,
+    retryTimer: null,
+    retryStopTimer: null,
     cleanup: null,
   };
 
   globalThis[RUNTIME_KEY] = runtime;
 
-  const Typing =
-    findByProps("startTyping", "stopTyping")
-    ?? findByProps("startTyping");
+  function installToastCompat() {
+    try {
+      const current = globalThis[TOAST_COMPAT_KEY];
+      if (current?.active === true) return true;
+
+      const toastActions =
+        vendetta.metro.common?.toasts
+        ?? findByProps("open", "close");
+
+      if (!toastActions || typeof toastActions.open !== "function") return false;
+
+      const unpatch = instead("open", toastActions, (args, original) => {
+        // Current Discord uses open(key, toast). Older Vendetta/Shiggy code
+        // still calls open({ key, content, ... }), which passes undefined as
+        // the toast and crashes useToastContainer on toast.position.
+        if (args?.length === 1 && args[0] && typeof args[0] === "object") {
+          const legacy = args[0];
+          const text = legacy.text ?? legacy.content;
+          if (text != null) {
+            const key = String(legacy.key ?? `vd-toast-${Date.now()}`);
+            const toast = { text: String(text) };
+            if (legacy.position != null) toast.position = legacy.position;
+            if (legacy.duration != null) toast.duration = legacy.duration;
+            if (legacy.variant != null) toast.variant = legacy.variant;
+            if (legacy.surface != null) toast.surface = legacy.surface;
+            return original(key, toast);
+          }
+        }
+
+        return original(...args);
+      });
+
+      globalThis[TOAST_COMPAT_KEY] = {
+        active: true,
+        target: toastActions,
+        unpatch,
+      };
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function resolveTyping() {
+    try {
+      return findByProps("startTyping", "stopTyping")
+        ?? findByProps("startTyping");
+    } catch {
+      return null;
+    }
+  }
 
   const Toasts =
     vendetta.ui?.toasts
@@ -118,6 +171,28 @@
       : "Disabled Silent Typing — You are Now Visible";
 
     try {
+      const toastActions =
+        vendetta.metro.common?.toasts
+        ?? findByProps("open", "close");
+
+      if (typeof toastActions?.open === "function") {
+        const key = `silent-typing-${enabled ? "on" : "off"}-${Date.now()}`;
+
+        if (toastActions.open.length >= 2) {
+          toastActions.open(key, { text });
+          return;
+        }
+
+        toastActions.open({
+          key,
+          content: text,
+          text,
+          source: getAssetIDByName("KeyboardIcon") ?? getAssetIDByName("ChatIcon"),
+          icon: getAssetIDByName("KeyboardIcon") ?? getAssetIDByName("ChatIcon"),
+        });
+        return;
+      }
+
       Toasts?.showToast?.(
         text,
         getAssetIDByName("KeyboardIcon") ?? getAssetIDByName("ChatIcon"),
@@ -152,7 +227,16 @@
 
   function findRenderedComponent(name) {
     try {
-      const byDisplayName = find(module => module?.type?.displayName === name);
+      const byDisplayName = find(module => (
+        module?.displayName === name
+        || module?.render?.displayName === name
+        || module?.type?.displayName === name
+        || module?.type?.render?.displayName === name
+        || module?.default?.displayName === name
+        || module?.default?.render?.displayName === name
+        || module?.default?.type?.displayName === name
+        || module?.default?.type?.render?.displayName === name
+      ));
       if (byDisplayName) return byDisplayName;
     } catch {}
 
@@ -165,12 +249,27 @@
 
   function getRenderTarget(name) {
     const component = findRenderedComponent(name);
+    if (!component) return null;
 
-    if (component && typeof component.default === "function") {
-      return { target: component, method: "default" };
+    // Current Discord composer modules are React.memo wrappers.
+    if (component.default?.type && typeof component.default.type === "function") {
+      return { target: component.default, method: "type" };
+    }
+    if (component.type && typeof component.type === "function") {
+      return { target: component, method: "type" };
     }
 
-    const target = component?.type ?? component;
+    if (typeof component.default === "function") {
+      return { target: component, method: "default" };
+    }
+    if (component.default?.type && typeof component.default.type.render === "function") {
+      return { target: component.default.type, method: "render" };
+    }
+    if (component.default && typeof component.default.render === "function") {
+      return { target: component.default, method: "render" };
+    }
+
+    const target = component.type ?? component;
     if (target && typeof target.render === "function") {
       return { target, method: "render" };
     }
@@ -308,10 +407,31 @@
     return true;
   }
 
+  function patchFluxTyping() {
+    if (runtime.fluxPatched) return true;
+
+    const intercept = globalThis.bunny?.api?.flux?.intercept;
+    if (typeof intercept !== "function") return false;
+
+    const unpatch = intercept(payload => {
+      if (storage.enabled === true && payload?.type === "TYPING_START_LOCAL") {
+        return false;
+      }
+      return undefined;
+    });
+
+    if (typeof unpatch !== "function") return false;
+    runtime.patches.push(unpatch);
+    runtime.fluxPatched = true;
+    return true;
+  }
+
   function patchTyping() {
     if (runtime.typingPatched) return true;
+    const Typing = resolveTyping();
     if (!Typing?.startTyping) return false;
 
+    // Legacy fallback for Discord builds that still route through startTyping.
     runtime.patches.push(
       instead("startTyping", Typing, (args, original) => {
         if (storage.enabled === true) return;
@@ -324,7 +444,33 @@
   }
 
   function installPatches() {
-    return [patchComposer(), patchTyping()];
+    return [patchComposer(), patchFluxTyping(), patchTyping()];
+  }
+
+  function stopRetryWindow() {
+    if (runtime.retryTimer) clearInterval(runtime.retryTimer);
+    if (runtime.retryStopTimer) clearTimeout(runtime.retryStopTimer);
+    runtime.retryTimer = null;
+    runtime.retryStopTimer = null;
+  }
+
+  function patchesReady() {
+    return !!(
+      (runtime.leftPatched || runtime.rightPatched)
+      && (runtime.fluxPatched || runtime.typingPatched)
+    );
+  }
+
+  function startRetryWindow() {
+    stopRetryWindow();
+    const retry = () => {
+      installPatches();
+      if (patchesReady()) stopRetryWindow();
+    };
+
+    retry();
+    runtime.retryTimer = setInterval(retry, 750);
+    runtime.retryStopTimer = setTimeout(stopRetryWindow, 30000);
   }
 
   function SettingRow({ title, description, control }) {
@@ -751,10 +897,23 @@
           "Reset all appearance settings",
         ),
       ),
+      React.createElement(
+        RN.Text,
+        {
+          style: {
+            color: "#80848E",
+            fontSize: 11,
+            lineHeight: 16,
+            marginTop: 12,
+          },
+        },
+        `v${VERSION} • left:${runtime.leftPatched ? "yes" : "waiting"} • right:${runtime.rightPatched ? "yes" : "waiting"} • flux:${runtime.fluxPatched ? "safe" : "waiting"} • legacy:${runtime.typingPatched ? "yes" : "waiting"} • toast-fix:${globalThis[TOAST_COMPAT_KEY]?.active ? "yes" : "waiting"}`,
+      ),
     );
   }
 
   function cleanup() {
+    stopRetryWindow();
     while (runtime.patches.length) {
       try {
         runtime.patches.pop()?.();
@@ -765,6 +924,7 @@
     runtime.leftPatched = false;
     runtime.rightPatched = false;
     runtime.typingPatched = false;
+    runtime.fluxPatched = false;
 
     if (globalThis[RUNTIME_KEY] === runtime) {
       try {
@@ -777,15 +937,15 @@
 
   runtime.cleanup = cleanup;
   migrateStorage();
+  installToastCompat();
   const earlyResults = installPatches();
 
   return {
     onLoad() {
       migrateStorage();
-      const results = installPatches();
-      if (![...earlyResults, ...results].some(Boolean)) {
-        throw new Error("Discord composer components were not found");
-      }
+      installToastCompat();
+      installPatches();
+      startRetryWindow();
     },
 
     onUnload() {

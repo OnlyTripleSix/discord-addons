@@ -13,7 +13,7 @@ Stable plugins, themes, and other add-ons for supported Discord clients.
 
 ## ShiggyCord plugins
 
-The ShiggyCord collection has **7 released plugins**. Theme Toolkit remains separate and has not been ported to ShiggyCord.
+The ShiggyCord collection has **8 released plugins**. Theme Toolkit remains separate and has not been ported to ShiggyCord.
 
 ### Account Switcher
 
@@ -40,6 +40,16 @@ Makes inaccessible channels easier to understand when Discord has already sent t
 - Restores channel names from available metadata.
 - Does not grant message access or bypass server permissions.
 - Does not load inaccessible channel messages.
+
+### Hide Call Buttons
+
+Reliably hides call controls across current Discord mobile surfaces.
+
+- Hides DM voice and video call buttons.
+- Hides the user-profile call button.
+- Hides the Friends-list call action.
+- Hides the voice-channel camera button.
+- Uses ShiggyCord's lazy module hooks so late-loaded Discord screens stay covered.
 
 ### Purge Tools
 
@@ -88,13 +98,14 @@ Add the raw directory URL to ShiggyCord's plugin manager.
 
 | Plugin | Install URL |
 | --- | --- |
-| Account Switcher | `https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/clients/shiggycord/plugins/account-switcher/` |
-| Composer Cleaner | `https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/clients/shiggycord/plugins/composer-cleaner/` |
-| Hidden Channels | `https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/clients/shiggycord/plugins/hidden-channels/` |
-| Purge Tools | `https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/clients/shiggycord/plugins/purge-tools/` |
-| Quick Mock | `https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/clients/shiggycord/plugins/quick-mock/` |
-| Settings Pins | `https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/clients/shiggycord/plugins/settings-pins/` |
-| Silent Typing | `https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/clients/shiggycord/plugins/silent-typing/` |
+| Account Switcher | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/account-switcher/` |
+| Composer Cleaner | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/composer-cleaner/` |
+| Hidden Channels | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/hidden-channels/` |
+| Hide Call Buttons | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/hide-call-buttons/` |
+| Purge Tools | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/purge-tools/` |
+| Quick Mock | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/quick-mock/` |
+| Settings Pins | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/settings-pins/` |
+| Silent Typing | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/silent-typing/` |
 
 ## Purge Tools account-risk notice
 
@@ -108,43 +119,43 @@ This notice applies to both the ShiggyCord and Revenge Classic builds.
 
 Restores Discord's native mobile multi-account switcher and uses Discord's own saved-account state.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/plugins/account-switcher/`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/account-switcher/`
 
 ### Silent Typing
 
 Adds a configurable silent-typing toggle to the message composer.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/plugins/silent-typing/`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/silent-typing/`
 
 ### Composer Cleaner
 
 Lets you hide selected native composer buttons.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/plugins/composer-cleaner/`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/composer-cleaner/`
 
 ### Purge Tools
 
 Bulk cleanup for messages and reactions with previews, checkpoints, resume support, verification, and rate-limit-aware pacing.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/plugins/purge-tools/`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/purge-tools/`
 
 ### Hidden Channels
 
 Shows available channel metadata for inaccessible channels without granting message access.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/plugins/hidden-channels/`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/hidden-channels/`
 
 ### Quick Mock
 
 Adds alternating-case mock text through long-press and `/mock` workflows.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/plugins/quick-mock/`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/quick-mock/`
 
 ### Theme Toolkit
 
 Revenge Classic only for now. Create, edit, save, switch, preview, export, and share themes with additional color, icon, folder, mention, and avatar controls.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/plugins/theme-toolkit/`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/theme-toolkit/`
 
 ## Themes
 
@@ -152,7 +163,7 @@ Revenge Classic only for now. Create, edit, save, switch, preview, export, and s
 
 Pure-black OLED theme with white and gray UI accents.
 
-`https://raw.githubusercontent.com/ItsTripleSix/discord-addons/main/themes/amoled-monochrome.json`
+`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/themes/amoled-monochrome.json`
 
 ## Compatibility
 
@@ -169,4 +180,4 @@ Discord updates can change internal modules and occasionally require plugin fixe
 
 ## License
 
-MIT
+Repository-owned code is MIT unless otherwise noted. Hide Call Buttons retains the original BSD-3-Clause terms in its plugin folder.
