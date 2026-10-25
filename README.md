@@ -1,161 +1,67 @@
-# Discord Add-ons
+<p align="center">
+  <img src="docs/assets/discord-addons-banner.svg" alt="Discord Add-ons by TripleSix — mobile now, desktop next" width="900">
+</p>
 
-Stable plugins, themes, and other add-ons for supported Discord clients.
+<p align="center">
+  <img alt="ShiggyCord plugins" src="https://img.shields.io/badge/ShiggyCord-8_plugins-83D1B8?style=for-the-badge&labelColor=171B1B">
+  <img alt="Revenge Classic plugins" src="https://img.shields.io/badge/Revenge_Classic-7_plugins-FFF5E6?style=for-the-badge&labelColor=171B1B">
+  <img alt="Release channel stable" src="https://img.shields.io/badge/Release_channel-Stable-5865F2?style=for-the-badge&labelColor=171B1B">
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT_%2B_third--party-FFF5E6?style=for-the-badge&labelColor=171B1B"></a>
+</p>
 
-## Quick navigation
+<p align="center">
+  <a href="#mobile-clients">Mobile</a> ·
+  <a href="#plugin-matrix">Plugins</a> ·
+  <a href="#themes">Themes</a> ·
+  <a href="#desktop-clients">Desktop</a> ·
+  <a href="#development-channels">Development</a>
+</p>
 
-- [ShiggyCord plugins](#shiggycord-plugins)
-- [ShiggyCord install URLs](#shiggycord-install-urls)
-- [Purge Tools account-risk notice](#purge-tools-account-risk-notice)
-- [Revenge Classic plugins](#revenge-classic-plugins)
-- [Themes](#themes)
-- [Repository roles](#repository-roles)
+**Useful Discord changes without turning the repository into a junk drawer.**
 
-## ShiggyCord plugins
+This is the stable home for my Discord plugins, themes, and client-specific add-ons. Mobile builds are separated by client so the right code lands on the right Discord mod. Desktop support has its own reserved section and will fill out only when those builds are actually ready.
 
-The ShiggyCord collection has **8 released plugins**. Theme Toolkit remains separate and has not been ported to ShiggyCord.
+> **Use the build for your client.** Discord internals change often, and a plugin built for ShiggyCord is not automatically interchangeable with Revenge Classic, Vencord, Equicord, or another client.
 
-### Account Switcher
+## Mobile clients
 
-Restores Discord's native-style mobile multi-account switching.
+### ShiggyCord
 
-- Uses Discord's existing saved-account state rather than storing or exporting account tokens itself.
-- Keeps Android push registration focused on the active account.
-- Uses native notification handling.
-- Includes persisted plugin settings.
+The actively maintained ShiggyCord collection currently has **8 stable plugins**.
 
-### Composer Cleaner
+[Browse ShiggyCord builds →](clients/shiggycord/plugins/) · [Quick-install list →](clients/shiggycord/plugins/README.md)
 
-Cleans up the message composer without removing third-party composer plugins.
+### Revenge Classic
 
-- Individually hide attachments, gifts, emoji, microphone/voice, apps/commands, and new-thread controls.
-- Changes are configurable from plugin settings.
-- Targets native Discord composer controls only.
+The retained Revenge Classic collection currently has **7 stable plugins**, including Theme Toolkit.
 
-### Hidden Channels
+[Browse Revenge Classic builds →](clients/revenge-classic/)
 
-Makes inaccessible channels easier to understand when Discord has already sent their metadata to the client.
+## Plugin matrix
 
-- Shows hidden/inaccessible channel entries that are already present locally.
-- Restores channel names from available metadata.
-- Does not grant message access or bypass server permissions.
-- Does not load inaccessible channel messages.
+| Add-on | What it does | ShiggyCord | Revenge Classic |
+| --- | --- | :---: | :---: |
+| **Account Switcher** | Native-style multi-account switching using Discord's saved-account system. The ShiggyCord build also keeps Android push registration focused on the active account. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/account-switcher/) | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/account-switcher/) |
+| **Composer Cleaner** | Hides selected native composer controls without removing third-party composer plugins. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/composer-cleaner/) | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/composer-cleaner/) |
+| **Hidden Channels** | Shows inaccessible channel metadata already present locally. Does **not** bypass server permissions or grant message access. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/hidden-channels/) | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/hidden-channels/) |
+| **Hide Call Buttons** | Hides DM, profile, Friends-list, and voice-panel call controls with lazy ShiggyCord hooks. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/hide-call-buttons/) | — |
+| **Purge Tools** | Previewed bulk message/reaction cleanup with pacing, verification, media protection, and resume checkpoints. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/purge-tools/) | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/purge-tools/) |
+| **Quick Mock** | Alternating-case mock text through slash, reply, and long-press workflows. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/quick-mock/) | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/quick-mock/) |
+| **Settings Pins** | Pins plugin settings into ShiggyCord and can hide existing non-core shortcuts. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/settings-pins/) | — |
+| **Silent Typing** | Adds a customizable composer toggle that suppresses Discord typing events while enabled. | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/silent-typing/) | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/silent-typing/) |
+| **Theme Toolkit** | Create, edit, save, preview, export, and share Discord themes. | — | [Install](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/theme-toolkit/) |
 
-### Hide Call Buttons
+### Installing mobile plugins
 
-Reliably hides call controls across current Discord mobile surfaces.
+Copy the **raw directory URL** from the table into your client's plugin manager.
 
-- Hides DM voice and video call buttons.
-- Hides the user-profile call button.
-- Hides the Friends-list call action.
-- Hides the voice-channel camera button.
-- Uses ShiggyCord's lazy module hooks so late-loaded Discord screens stay covered.
-
-### Purge Tools
-
-Bulk cleanup for messages and reactions across selected DMs, channels, and servers.
-
-- Per-target author, reaction, filter, and deletion-order controls.
-- Preview/discovery before destructive cleanup.
-- Reusable preview snapshots so a confirmed purge can skip repeating initial discovery.
-- Message deletion and reaction cleanup with permission checks for moderator actions.
-- Media/attachment protection controls.
-- Pause, resume, interruption checkpoints, and optional automatic resume.
-- Conservative shared request pacing that adapts to Discord feedback.
-- Transient server-error retries with recovered/unresolved failure accounting.
-- Verification passes and readable progress/status reporting.
-
-### Quick Mock
-
-Fast alternating-case mock text.
-
-- `/mock` command workflow.
-- Reply-to-mock workflow.
-- Long-press message action.
-- Configurable long-press behavior.
-
-### Settings Pins
-
-Puts frequently used plugin settings directly into the main ShiggyCord settings section.
-
-- Pin installed plugin settings with per-plugin saved toggles.
-- Hide non-core plugin shortcuts that were already registered in ShiggyCord, including bundled/hard-baked entries.
-- Core ShiggyCord settings remain protected from hiding.
-- Pin and visibility choices persist.
-- After changing a pin or existing shortcut, use **ReShiggy** for the main Settings list to rebuild.
-
-### Silent Typing
-
-Adds an Aliucord-style silent-typing control to the message composer.
-
-- Toggle silent typing directly from chat input.
-- Suppresses Discord's typing event while enabled.
-- Customizable behavior through plugin settings.
-
-## ShiggyCord install URLs
-
-Add the raw directory URL to ShiggyCord's plugin manager.
-
-| Plugin | Install URL |
-| --- | --- |
-| Account Switcher | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/account-switcher/` |
-| Composer Cleaner | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/composer-cleaner/` |
-| Hidden Channels | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/hidden-channels/` |
-| Hide Call Buttons | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/hide-call-buttons/` |
-| Purge Tools | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/purge-tools/` |
-| Quick Mock | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/quick-mock/` |
-| Settings Pins | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/settings-pins/` |
-| Silent Typing | `https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/shiggycord/plugins/silent-typing/` |
+For ShiggyCord, use the `clients/shiggycord/plugins/` paths. The root `plugins/` URLs are retained for the Revenge Classic release layout and existing compatibility.
 
 ## Purge Tools account-risk notice
 
 > **Personally, Purge Tools has worked fine for me. Discord can still restrict or ban accounts for activity it considers abusive or automated. Use it at your own risk. I am not responsible for account restrictions, suspensions, or bans.**
 
-This notice applies to both the ShiggyCord and Revenge Classic builds.
-
-## Revenge Classic plugins
-
-### Account Switcher
-
-Restores Discord's native mobile multi-account switcher and uses Discord's own saved-account state.
-
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/account-switcher/`
-
-### Silent Typing
-
-Adds a configurable silent-typing toggle to the message composer.
-
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/silent-typing/`
-
-### Composer Cleaner
-
-Lets you hide selected native composer buttons.
-
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/composer-cleaner/`
-
-### Purge Tools
-
-Bulk cleanup for messages and reactions with previews, checkpoints, resume support, verification, and rate-limit-aware pacing.
-
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/purge-tools/`
-
-### Hidden Channels
-
-Shows available channel metadata for inaccessible channels without granting message access.
-
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/hidden-channels/`
-
-### Quick Mock
-
-Adds alternating-case mock text through long-press and `/mock` workflows.
-
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/quick-mock/`
-
-### Theme Toolkit
-
-Revenge Classic only for now. Create, edit, save, switch, preview, export, and share themes with additional color, icon, folder, mention, and avatar controls.
-
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/plugins/theme-toolkit/`
+This applies to both ShiggyCord and Revenge Classic builds.
 
 ## Themes
 
@@ -163,21 +69,45 @@ Revenge Classic only for now. Create, edit, save, switch, preview, export, and s
 
 Pure-black OLED theme with white and gray UI accents.
 
-`https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/themes/amoled-monochrome.json`
+[Get AMOLED Monochrome →](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/themes/amoled-monochrome.json)
+
+### Theme Toolkit
+
+Theme Toolkit remains **Revenge Classic-only** for now. It is intentionally separate from the ShiggyCord plugin set.
+
+[Open Theme Toolkit →](plugins/theme-toolkit/)
+
+## Desktop clients
+
+**Reserved for future releases — nothing here is being presented as finished desktop support yet.**
+
+| Desktop target | Status | Direction |
+| --- | --- | --- |
+| **[Official Discord + Vencord](clients/vencord/)** | Planned | Primary desktop target: keep official Discord feature parity while adding custom privacy and quality-of-life behavior. |
+| **[Equicord](clients/equicord/)** | Evaluating | Compatibility target where the larger plugin/custom-plugin ecosystem makes sense. |
+| **Desktop releases** | Not published yet | Stable install links appear here only after a build has been made and tested. |
+
+Desktop work will stay in its own client directories instead of being mixed into the mobile release folders.
 
 ## Compatibility
 
-Discord updates can change internal modules and occasionally require plugin fixes. Check the client-specific section for the build intended for your client.
+Discord updates can move or replace internal modules. A stable build means it was promoted from staging after testing; it does **not** mean Discord can never break it later.
 
-## Repository roles
+If something suddenly stops working after a Discord update, check the client-specific build first.
+
+## Development channels
 
 | Repository | Purpose |
 | --- | --- |
-| `discord-addons` | Stable public releases |
-| `discord-addons-staging` | Testing and refetch candidates |
-| `discord-addons-workbench` | Private development/workbench |
-| `ShiggyCord` | ShiggyCord client fork |
+| **[discord-addons](https://github.com/OnlyTripleSix/discord-addons)** | Stable public releases |
+| **[discord-addons-staging](https://github.com/OnlyTripleSix/discord-addons-staging)** | Public testing and refetch candidates |
+| `discord-addons-workbench` | Private development, experiments, and unreleased source |
+| **[ShiggyCord](https://github.com/OnlyTripleSix/ShiggyCord)** | Public source fork used for upstream/source work |
 
-## License
+## License and attribution
 
-Repository-owned code is MIT unless otherwise noted. Hide Call Buttons retains the original BSD-3-Clause terms in its plugin folder.
+Repository-owned code is available under the [MIT License](LICENSE) unless a plugin says otherwise.
+
+**Hide Call Buttons** is derived from John / `janisslsm`'s BSD-3-Clause work and retains its required license and attribution inside the plugin folder.
+
+Discord is a trademark of Discord Inc. This repository is independent and is not affiliated with or endorsed by Discord.
