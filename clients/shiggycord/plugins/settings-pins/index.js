@@ -8,7 +8,7 @@
   const { React, ReactNative: RN } = V.metro.common;
   const storage = V.plugin?.storage ?? {};
   const SELF_ID = String(V.plugin?.id ?? "");
-  const VERSION = "1.0.11-shiggy";
+  const VERSION = "1.0.12-shiggy";
   const SECTION = "ShiggyCord";
   const KEY_PREFIX = "ITS666_SETTINGS_PIN_";
   const STATE_VERSION = 1;
@@ -279,8 +279,40 @@
     return true;
   }
 
+  // Only the main Settings overview has both ACCOUNT and APPEARANCE.
+  // ShiggyCord's registered section also appears within nested settings pages.
+  function isSettingsOverview(node) {
+    if (!Array.isArray(node?.sections)) return false;
+    const keys = new Set();
+    for (const section of node.sections) {
+      if (!Array.isArray(section?.settings)) continue;
+      for (const key of section.settings) keys.add(String(key ?? ""));
+    }
+    return keys.has("ACCOUNT") && keys.has("APPEARANCE");
+  }
+
+  function stripPinsFromSubmenu(node) {
+    if (!Array.isArray(node?.sections) || isSettingsOverview(node)) return false;
+    let changed = false;
+    for (const section of node.sections) {
+      if (!Array.isArray(section?.settings)) continue;
+      const kept = section.settings.filter(
+        key => !String(key ?? "").startsWith(KEY_PREFIX)
+      );
+      if (kept.length !== section.settings.length) {
+        section.settings.splice(0, section.settings.length, ...kept);
+        changed = true;
+      }
+    }
+    return changed;
+  }
+
   function repairSettingsNode(node) {
     if (!node || !Array.isArray(node.sections)) return node;
+    if (!isSettingsOverview(node)) {
+      stripPinsFromSubmenu(node);
+      return node;
+    }
 
     const rows = shiggyRows();
     if (!Array.isArray(rows)) return node;
