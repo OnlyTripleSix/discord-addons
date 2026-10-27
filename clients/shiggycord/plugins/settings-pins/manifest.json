@@ -1,13 +1,13 @@
 {
   "name": "Settings Pins",
-  "description": "Pin plugin settings into ShiggyCord or hide existing non-core plugin shortcuts. Repairs cached settings lists across cold starts.",
+  "description": "Pin plugin settings only on the main Settings overview, not in submenus; hide non-core shortcuts.",
   "authors": [
     {
       "name": "ItsTripleSix"
     }
   ],
   "main": "index.js",
-  "hash": "d5612ef77f292ae09f4053ebeb90678d6f95378c",
+  "hash": "8c28c70c7b9ea700f1fcedbdc8a14e00eff18309",
   "vendetta": {
     "icon": "PuzzlePieceIcon"
   }
