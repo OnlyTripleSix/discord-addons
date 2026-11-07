@@ -74,7 +74,7 @@
       "path": ".release/SHA256SUMS.txt",
       "name": "SHA256SUMS.txt",
       "content_type": "text/plain",
-      "sha256": "ad04c9d0ee4fa542035ebe782a05bb9bf1d33dfb34b03a835ed296dd8aa70a01"
+      "sha256": "5739acf70d6f89400e9f4e4c19205463a3f2b4268095074851f784da40884d83"
     }
   ],
   "retire_release_tags": [
