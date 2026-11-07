@@ -1,5 +1,5 @@
 (function(exports){"use strict";
-const {React,ReactNative}=valenced.react; const {onSettingsModulesLoaded,registerSettingsItem,addSettingsItemToSection,refreshSettings}=valenced.discord.modules.settings;const {ToastActionCreators}=valenced.discord.actions;
+const {React,ReactNative}=valenced.react;const {onSettingsModulesLoaded,registerSettingsItem,addSettingsItemToSection,refreshSettings}=valenced.discord.modules.settings;const {ToastActionCreators}=valenced.discord.actions;
 const PIN_PREFIX = 'ITS666_VALENCED_PIN_';
 const DEFAULT_NAMES = new Set(['Account Switcher', 'Purge Tools']);
 
@@ -244,7 +244,7 @@ function Settings() {
   }
   const error=model.diagnostics().saveError
   if(error) content.push(React.createElement(ReactNative.Text,{key:'error',style:{color:'#f23f43',marginTop:12}},error))
-  content.push(React.createElement(ReactNative.Text,{key:'version',style:{color:C.muted,fontSize:12,marginTop:14}},'v0.1.0'))
+  content.push(React.createElement(ReactNative.Text,{key:'version',style:{color:C.muted,fontSize:12,marginTop:14}},'v0.1.2'))
   return React.createElement(ReactNative.ScrollView,{style:{flex:1,backgroundColor:C.bg},contentContainerStyle:{padding:16,paddingBottom:40}},content)
 }
 

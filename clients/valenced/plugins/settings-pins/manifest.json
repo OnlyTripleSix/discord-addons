@@ -4,7 +4,7 @@
   "name": "Settings Pins",
   "description": "Pin plugin settings in the main Valenced section and hide supported non-core shortcuts.",
   "author": "ItsTripleSix",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "icon": "PuzzlePieceIcon",
   "dependencies": {
     "valenced.api": {
@@ -18,10 +18,6 @@
     },
     "valenced.settings.plugins": {
       "version": "*"
-    },
-    "valenced.api.hidden": {
-      "version": "*",
-      "optional": true
     }
   },
   "dist": {

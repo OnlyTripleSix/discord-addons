@@ -7,13 +7,13 @@ Add this repository URL in Valenced's plugin manager:
 | Plugin | Version | Download |
 | --- | --- | --- |
 | Purge Tools | 0.1.1 | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.purge-tools@0.1.1.zip) |
-| Settings Pins | 0.1.1 | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.settings-pins@0.1.1.zip) |
+| Settings Pins | 0.1.2 | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.settings-pins@0.1.2.zip) |
 | Quick Mock | 0.1.0 | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.quick-mock@0.1.0.zip) |
 | Hidden Channels | 0.1.0 | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.hidden-channels@0.1.0.zip) |
 
 Purge Tools opens a complete preview-and-cleanup panel, with per-target filters, pinned/media protection, reaction scopes, pacing, reports, and account-specific checkpoints. Start and saved-job Resume require confirmation on the phone. Automatic resume stays disabled. No top confirmation banner is shown.
 
-Settings Pins puts selected plugin settings in the main Valenced section and can hide supported non-core shortcuts. Core Valenced settings stay protected. Saved pins now work with Developer Mode OFF. Developer Mode is only needed for automatic discovery of arbitrary plugins and hiding unrelated shortcuts.
+Settings Pins puts selected plugin settings in the main Valenced section and can hide supported non-core shortcuts. Core Valenced settings stay protected. Saved pins now work with Developer Mode OFF. Settings Pins no longer links to Developer Mode, so turning it off does not stop the plugin. Developer Mode is only needed for automatic discovery and hiding unrelated shortcuts.
 
 Quick Mock adds **Mock** to a text message's long-press menu. By default, it puts alternating-case text into the chat input for review. Use **`/mock message:Test text`** for typed text, or reply to a text message and send **`/mock`** without an argument. Slash commands send the result. The saved **Long-press sends immediately** option is OFF by default. Quick Mock requires **Coco's Command Lib 2.x** from Valenced's community catalog; keep that library enabled. Composer retries, clipboard fallback, and usage help are included.
 
