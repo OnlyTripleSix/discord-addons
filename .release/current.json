@@ -1,0 +1,47 @@
+{
+  "repository": "OnlyTripleSix/discord-addons",
+  "tag": "plugins-2026.11.07",
+  "name": "Discord Add-ons — BetterDiscord & Valenced",
+  "body": "Desktop and mobile plugins are now collected on one page, with separate sections for BetterDiscord and Valenced.\n\n## BetterDiscord\n\n- **Purge Tools 1.0.0** — preview, target filters, media/pinned protection, reaction cleanup, adaptive pacing, account-specific checkpoints, and direct right-click access.\n- Install the attached **PurgeTools.plugin.js**, or extract **PurgeTools-BetterDiscord-1.0.0.zip** into the BetterDiscord plugins folder.\n- Existing configuration is retained when updating.\n\n## Valenced\n\n- **Purge Tools 0.1.1** — the accepted mobile port, with confirmation before each new/resumed job and no top confirmation banner.\n- **Settings Pins 0.1.0** — accepted settings shortcuts and protected core settings.\n- Add the [Valenced repository](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/valenced/index.json) to the plugin manager.\n\n## Validation\n\n33 desktop automated checks, desktop browser checks, and 57 mobile automated checks passed. The accepted desktop workflow and mobile Purge/Settings Pins were tested by the user. Not every moderation, reaction, or recovery scenario has been tested live.\n\nThe release catalog now focuses on BetterDiscord and Valenced. Legacy releases were preserved in the private workbench before removal from the active release page.\n\nPurge operations are permanent. Discord may restrict automated or abusive activity. Use at your own risk.\n",
+  "assets": [
+    {
+      "path": "clients/betterdiscord/plugins/purge-tools/PurgeTools.plugin.js",
+      "name": "PurgeTools.plugin.js",
+      "content_type": "text/javascript",
+      "sha256": "a6e5aa502a75f22334282c2caff239876b2c20400e881373128185e3a01b0434"
+    },
+    {
+      "path": "clients/betterdiscord/packages/PurgeTools-BetterDiscord-1.0.0.zip",
+      "name": "PurgeTools-BetterDiscord-1.0.0.zip",
+      "content_type": "application/zip",
+      "sha256": "f9c99b6ed39f3f288cdd42f94f62badafd0fac97f4a2832b240ac118f5bf9e9b"
+    },
+    {
+      "path": "clients/valenced/packages/dev.itstriplesix.purge-tools@0.1.1.zip",
+      "name": "dev.itstriplesix.purge-tools@0.1.1.zip",
+      "content_type": "application/zip",
+      "sha256": "fd9b9df2d0d5b8f124a10519344517def91db3bd4e1ee3f89f4845322ad23a51"
+    },
+    {
+      "path": "clients/valenced/packages/dev.itstriplesix.settings-pins@0.1.0.zip",
+      "name": "dev.itstriplesix.settings-pins@0.1.0.zip",
+      "content_type": "application/zip",
+      "sha256": "a387c270e3f781c64cc1843283800a92d6b47a26b052cd9c7bb33ac088e566fa"
+    },
+    {
+      "path": "clients/valenced/index.json",
+      "name": "valenced-index.json",
+      "content_type": "application/json",
+      "sha256": "87f31247f287479e4ad02cb1789c6e69af0ac225950aed7f6e3e7e45dc249624"
+    },
+    {
+      "path": ".release/SHA256SUMS.txt",
+      "name": "SHA256SUMS.txt",
+      "content_type": "text/plain",
+      "sha256": "53634f220a51136cdd62949e02d87cc449140edaeb401f83534398eee6e5d3a3"
+    }
+  ],
+  "retire_release_tags": [
+    "shiggycord-plugins-2026.09.16"
+  ]
+}

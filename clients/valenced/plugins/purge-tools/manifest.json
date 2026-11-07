@@ -1,0 +1,16 @@
+{
+  "format": 1,
+  "id": "dev.itstriplesix.purge-tools",
+  "name": "Purge Tools",
+  "description": "Purge messages and reactions with account-specific filters, pacing, checkpoints, reports, and confirmation before each job.",
+  "author": "ItsTripleSix",
+  "version": "0.1.1",
+  "icon": "TrashIcon",
+  "dependencies": {
+    "valenced.api": { "version": ">=1 <2" },
+    "discord": { "version": "*" },
+    "valenced.settings": { "version": "*" },
+    "valenced.settings.plugins": { "version": "*" }
+  },
+  "dist": { "script": "index.js" }
+}

@@ -1,0 +1,5 @@
+a6e5aa502a75f22334282c2caff239876b2c20400e881373128185e3a01b0434  PurgeTools.plugin.js
+f9c99b6ed39f3f288cdd42f94f62badafd0fac97f4a2832b240ac118f5bf9e9b  PurgeTools-BetterDiscord-1.0.0.zip
+fd9b9df2d0d5b8f124a10519344517def91db3bd4e1ee3f89f4845322ad23a51  dev.itstriplesix.purge-tools@0.1.1.zip
+a387c270e3f781c64cc1843283800a92d6b47a26b052cd9c7bb33ac088e566fa  dev.itstriplesix.settings-pins@0.1.0.zip
+87f31247f287479e4ad02cb1789c6e69af0ac225950aed7f6e3e7e45dc249624  valenced-index.json

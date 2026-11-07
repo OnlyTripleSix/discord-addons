@@ -1,0 +1,30 @@
+{
+  "format": 1,
+  "id": "dev.itstriplesix.settings-pins",
+  "name": "Settings Pins",
+  "description": "Pin plugin settings in the main Valenced section and hide supported non-core shortcuts.",
+  "author": "ItsTripleSix",
+  "version": "0.1.0",
+  "icon": "PuzzlePieceIcon",
+  "dependencies": {
+    "valenced.api": {
+      "version": ">=1 <2"
+    },
+    "discord": {
+      "version": "*"
+    },
+    "valenced.settings": {
+      "version": "*"
+    },
+    "valenced.settings.plugins": {
+      "version": "*"
+    },
+    "valenced.api.hidden": {
+      "version": "*",
+      "optional": true
+    }
+  },
+  "dist": {
+    "script": "index.js"
+  }
+}
