@@ -26,6 +26,8 @@ Add this URL to Valenced's plugin repositories:
 | --- | --- | --- | --- |
 | **Purge Tools** | **0.1.1** | Previewed message/reaction cleanup with filters, media protection, pacing, reports, and confirmed resume. | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.purge-tools@0.1.1.zip) |
 | **Settings Pins** | **0.1.0** | Put chosen plugin settings in the main Valenced section and manage supported shortcuts. | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.settings-pins@0.1.0.zip) |
+| **Quick Mock** | **0.1.0** | Mock a message from its long-press menu, typed text, or a reply using `/mock`. | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.quick-mock@0.1.0.zip) |
+| **Hidden Channels** | **0.1.0** | Show hidden channel rows and names available in Discord's local data. | [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/dev.itstriplesix.hidden-channels@0.1.0.zip) |
 
 [Valenced installation and usage](clients/valenced/README.md)
 

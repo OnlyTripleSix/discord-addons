@@ -2,7 +2,7 @@
   "repository": "OnlyTripleSix/discord-addons",
   "tag": "plugins-2026.11.07",
   "name": "Discord Add-ons — BetterDiscord & Valenced",
-  "body": "Desktop and mobile plugins are now collected on one page, with separate sections for BetterDiscord and Valenced.\n\n## BetterDiscord\n\n- **Purge Tools 1.0.0** — preview, target filters, media/pinned protection, reaction cleanup, adaptive pacing, account-specific checkpoints, and direct right-click access.\n- Install the attached **PurgeTools.plugin.js**, or extract **PurgeTools-BetterDiscord-1.0.0.zip** into the BetterDiscord plugins folder.\n- Existing configuration is retained when updating.\n\n## Valenced\n\n- **Purge Tools 0.1.1** — the accepted mobile port, with confirmation before each new/resumed job and no top confirmation banner.\n- **Settings Pins 0.1.0** — accepted settings shortcuts and protected core settings.\n- Add the [Valenced repository](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/valenced/index.json) to the plugin manager.\n\n## Validation\n\n33 desktop automated checks, desktop browser checks, and 57 mobile automated checks passed. The accepted desktop workflow and mobile Purge/Settings Pins were tested by the user. Not every moderation, reaction, or recovery scenario has been tested live.\n\nThe release catalog now focuses on BetterDiscord and Valenced. Legacy releases were preserved in the private workbench before removal from the active release page.\n\nPurge operations are permanent. Discord may restrict automated or abusive activity. Use at your own risk.\n",
+  "body": "Desktop and mobile plugins are now collected on one page, with separate sections for BetterDiscord and Valenced.\n\n## BetterDiscord\n\n- **Purge Tools 1.0.0** — preview, target filters, media/pinned protection, reaction cleanup, adaptive pacing, account-specific checkpoints, and direct right-click access.\n- Install the attached **PurgeTools.plugin.js**, or extract **PurgeTools-BetterDiscord-1.0.0.zip** into the BetterDiscord plugins folder.\n- Existing configuration is retained when updating.\n\n## Valenced\n\n- **Purge Tools 0.1.1** — the accepted mobile port, with confirmation before each new/resumed job and no top confirmation banner.\n- **Settings Pins 0.1.0** — accepted settings shortcuts and protected core settings.\n- **Quick Mock 0.1.0** — long-press Mock, typed `/mock`, reply `/mock`, direct chat input, and optional immediate sending (OFF by default). Requires Coco's Command Lib 2.x from Valenced's community catalog.\n- **Hidden Channels 0.1.0** — hidden channel rows and locally available names, with category collapse behavior and unchanged server permissions. Missing metadata cannot be reconstructed.\n- Add the [Valenced repository](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/valenced/index.json) to the plugin manager.\n\n## Validation\n\n33 desktop automated checks, desktop browser checks, and 88 mobile automated checks passed. Production Quick Mock and Hidden Channels bundles also passed command, hook, settings, and cleanup checks. The accepted desktop workflow and mobile Purge, Settings Pins, Quick Mock, and Hidden Channels were tested by the user. Not every moderation, reaction, or recovery scenario has been tested live.\n\nThe release catalog now focuses on BetterDiscord and Valenced. Legacy releases were preserved in the private workbench before removal from the active release page.\n\nPurge operations are permanent. Discord may restrict automated or abusive activity. Use at your own risk.\n",
   "assets": [
     {
       "path": "clients/betterdiscord/plugins/purge-tools/PurgeTools.plugin.js",
@@ -29,16 +29,28 @@
       "sha256": "a387c270e3f781c64cc1843283800a92d6b47a26b052cd9c7bb33ac088e566fa"
     },
     {
+      "path": "clients/valenced/packages/dev.itstriplesix.quick-mock@0.1.0.zip",
+      "name": "dev.itstriplesix.quick-mock@0.1.0.zip",
+      "content_type": "application/zip",
+      "sha256": "10959392e31340a13f42cfa55e27050f479d90fa437457d621b94b0781c31d48"
+    },
+    {
+      "path": "clients/valenced/packages/dev.itstriplesix.hidden-channels@0.1.0.zip",
+      "name": "dev.itstriplesix.hidden-channels@0.1.0.zip",
+      "content_type": "application/zip",
+      "sha256": "4fb37fa9c0a4306671804b36bb75ce7f87f2dacecde18ce30ef4d4b7b2524e11"
+    },
+    {
       "path": "clients/valenced/index.json",
       "name": "valenced-index.json",
       "content_type": "application/json",
-      "sha256": "87f31247f287479e4ad02cb1789c6e69af0ac225950aed7f6e3e7e45dc249624"
+      "sha256": "bf47666aaaa59078db4d7235c62f2dfac14fa5d86b34322183a00c1caeee226f"
     },
     {
       "path": ".release/SHA256SUMS.txt",
       "name": "SHA256SUMS.txt",
       "content_type": "text/plain",
-      "sha256": "53634f220a51136cdd62949e02d87cc449140edaeb401f83534398eee6e5d3a3"
+      "sha256": "ead9633f0a21dc1e7cd38a7198a72359e5daeea46b477aaab39073d2db180ee0"
     }
   ],
   "retire_release_tags": [

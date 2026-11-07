@@ -66,6 +66,69 @@
           }
         }
       }
+    },
+    "dev.itstriplesix.quick-mock": {
+      "name": "Quick Mock",
+      "description": "Mock text from a message action, a reply, or /mock, with direct chat input and optional immediate sending.",
+      "author": "ItsTripleSix",
+      "icon": "PencilIcon",
+      "channels": {
+        "latest": "0.1.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "url": "https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/valenced/packages/dev.itstriplesix.quick-mock@0.1.0.zip",
+          "sha256": "10959392e31340a13f42cfa55e27050f479d90fa437457d621b94b0781c31d48",
+          "size": 6325,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "valenced.settings": {
+              "version": "*"
+            },
+            "valenced.settings.plugins": {
+              "version": "*"
+            },
+            "dev.cocobo1.command-lib": {
+              "version": ">=2 <3"
+            }
+          }
+        }
+      }
+    },
+    "dev.itstriplesix.hidden-channels": {
+      "name": "Hidden Channels",
+      "description": "Show hidden server channel rows and their available names.",
+      "author": "ItsTripleSix",
+      "icon": "LockIcon",
+      "channels": {
+        "latest": "0.1.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "url": "https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/valenced/packages/dev.itstriplesix.hidden-channels@0.1.0.zip",
+          "sha256": "4fb37fa9c0a4306671804b36bb75ce7f87f2dacecde18ce30ef4d4b7b2524e11",
+          "size": 5255,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "valenced.settings": {
+              "version": "*"
+            },
+            "valenced.settings.plugins": {
+              "version": "*"
+            }
+          }
+        }
+      }
     }
   }
 }

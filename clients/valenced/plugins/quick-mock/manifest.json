@@ -1,0 +1,17 @@
+{
+  "format": 1,
+  "id": "dev.itstriplesix.quick-mock",
+  "name": "Quick Mock",
+  "description": "Mock text from a message action, a reply, or /mock, with direct chat input and optional immediate sending.",
+  "author": "ItsTripleSix",
+  "version": "0.1.0",
+  "icon": "PencilIcon",
+  "dependencies": {
+    "valenced.api": { "version": ">=1 <2" },
+    "discord": { "version": "*" },
+    "valenced.settings": { "version": "*" },
+    "valenced.settings.plugins": { "version": "*" },
+    "dev.cocobo1.command-lib": { "version": ">=2 <3" }
+  },
+  "dist": { "script": "index.js" }
+}

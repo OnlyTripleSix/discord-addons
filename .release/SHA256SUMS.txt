@@ -2,4 +2,6 @@ a6e5aa502a75f22334282c2caff239876b2c20400e881373128185e3a01b0434  PurgeTools.plu
 f9c99b6ed39f3f288cdd42f94f62badafd0fac97f4a2832b240ac118f5bf9e9b  PurgeTools-BetterDiscord-1.0.0.zip
 fd9b9df2d0d5b8f124a10519344517def91db3bd4e1ee3f89f4845322ad23a51  dev.itstriplesix.purge-tools@0.1.1.zip
 a387c270e3f781c64cc1843283800a92d6b47a26b052cd9c7bb33ac088e566fa  dev.itstriplesix.settings-pins@0.1.0.zip
-87f31247f287479e4ad02cb1789c6e69af0ac225950aed7f6e3e7e45dc249624  valenced-index.json
+10959392e31340a13f42cfa55e27050f479d90fa437457d621b94b0781c31d48  dev.itstriplesix.quick-mock@0.1.0.zip
+4fb37fa9c0a4306671804b36bb75ce7f87f2dacecde18ce30ef4d4b7b2524e11  dev.itstriplesix.hidden-channels@0.1.0.zip
+bf47666aaaa59078db4d7235c62f2dfac14fa5d86b34322183a00c1caeee226f  valenced-index.json

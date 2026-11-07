@@ -1,0 +1,16 @@
+{
+  "format": 1,
+  "id": "dev.itstriplesix.hidden-channels",
+  "name": "Hidden Channels",
+  "description": "Show hidden server channel rows and their available names.",
+  "author": "ItsTripleSix",
+  "version": "0.1.0",
+  "icon": "LockIcon",
+  "dependencies": {
+    "valenced.api": { "version": ">=1 <2" },
+    "discord": { "version": "*" },
+    "valenced.settings": { "version": "*" },
+    "valenced.settings.plugins": { "version": "*" }
+  },
+  "dist": { "script": "index.js" }
+}
