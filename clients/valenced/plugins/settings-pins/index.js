@@ -17,7 +17,19 @@ function createPinsModel(env, saved, persist) {
     shortcuts: { ...(saved?.shortcuts || {}) },
   };
   let active = false, ready = false, queued = false, saveError = '';
-  let saveQueue = Promise.resolve();
+  let saveQueue = Promise.resolve(), retryTimer = null, retryAttempts = 0;
+  const retryDelays = [75, 200, 500, 1000, 2000, 4000, 8000];
+  function cancelRetry() {
+    if (retryTimer !== null) clearTimeout(retryTimer);
+    retryTimer = null;
+  }
+  function retryLater() {
+    if (!active || retryTimer !== null || retryAttempts >= retryDelays.length) return;
+    retryTimer = setTimeout(() => {
+      retryTimer = null;
+      scheduleRescan();
+    }, retryDelays[retryAttempts++]);
+  }
   const subscribers = new Set(), rowCleanups = new Map(), wrapped = new Map(), subscriptions = [];
 
   function notify() { subscribers.forEach(callback => callback()); }
@@ -95,7 +107,8 @@ function createPinsModel(env, saved, persist) {
     if (!active || !ready) return;
     if (!env.available()) {
       for (const [key,record] of [...wrapped]) restoreWrapper(key,record);
-      env.refresh(); notify(); return;
+      retryLater();
+      notify(); return;
     }
     let changed = false;
     for (const plugin of catalog()) {
@@ -117,9 +130,19 @@ function createPinsModel(env, saved, persist) {
       });
       let remove;
       try { remove = env.addToSection(key); }
-      catch(error) { unregister(); throw error; }
+      catch(error) {
+        unregister();
+        // Valenced registers its settings section in a separate startup callback.
+        // A cold boot can reach this point before that callback has run.
+        // Do not fail the plugin's start lifecycle; retry when registration completes.
+        retryLater();
+        notify();
+        return;
+      }
       rowCleanups.set(id, () => {remove(); unregister();});
     }
+    cancelRetry();
+    retryAttempts = 0;
     wrapExisting();
     if (changed) save().catch(() => {});
     env.refresh(); notify();
@@ -144,6 +167,7 @@ function createPinsModel(env, saved, persist) {
     async stop() {
       if (!active) return;
       active = false;
+      cancelRetry();
       subscriptions.splice(0).reverse().forEach(unsubscribe => unsubscribe?.());
       for (const [key,record] of [...wrapped]) restoreWrapper(key,record);
       [...rowCleanups.values()].reverse().forEach(cleanup => cleanup());
@@ -244,7 +268,7 @@ function Settings() {
   }
   const error=model.diagnostics().saveError
   if(error) content.push(React.createElement(ReactNative.Text,{key:'error',style:{color:'#f23f43',marginTop:12}},error))
-  content.push(React.createElement(ReactNative.Text,{key:'version',style:{color:C.muted,fontSize:12,marginTop:14}},'v0.1.2'))
+  content.push(React.createElement(ReactNative.Text,{key:'version',style:{color:C.muted,fontSize:12,marginTop:14}},'v0.1.3'))
   return React.createElement(ReactNative.ScrollView,{style:{flex:1,backgroundColor:C.bg},contentContainerStyle:{padding:16,paddingBottom:40}},content)
 }
 
