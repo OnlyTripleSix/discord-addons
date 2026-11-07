@@ -39,13 +39,36 @@
       "author": "ItsTripleSix",
       "icon": "PuzzlePieceIcon",
       "channels": {
-        "latest": "0.1.0"
+        "latest": "0.1.1"
       },
       "versions": {
         "0.1.0": {
           "url": "https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/valenced/packages/dev.itstriplesix.settings-pins@0.1.0.zip",
           "sha256": "a387c270e3f781c64cc1843283800a92d6b47a26b052cd9c7bb33ac088e566fa",
           "size": 3835,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "valenced.settings": {
+              "version": "*"
+            },
+            "valenced.settings.plugins": {
+              "version": "*"
+            },
+            "valenced.api.hidden": {
+              "version": "*",
+              "optional": true
+            }
+          }
+        },
+        "0.1.1": {
+          "url": "https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/valenced/packages/dev.itstriplesix.settings-pins@0.1.1.zip",
+          "sha256": "64c766a4aff01a8f20a8c8f0c73bec70db04b0f160662e4faa2da08e7377332e",
+          "size": 15322,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
