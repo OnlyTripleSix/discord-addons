@@ -6,15 +6,15 @@ Plugins for **BetterDiscord on desktop** and **Valenced on Android**.
 
 ## BetterDiscord
 
-| Plugin | Version | Install |
-| --- | --- | --- |
-| **Purge Tools** | **1.0.0** | [Plugin file](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/betterdiscord/plugins/purge-tools/PurgeTools.plugin.js) · [ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/PurgeTools-BetterDiscord-1.0.0.zip) |
+| Plugin | Version | What it does | Install |
+| --- | --- | --- | --- |
+| **Purge Tools** | **1.0.0** | Previewed cleanup with filters, media protection, pacing, reports, and resume checkpoints. | [Plugin file](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/betterdiscord/plugins/purge-tools/PurgeTools.plugin.js) · [Guide](clients/betterdiscord/plugins/purge-tools/README.md) |
+| **Quick Mock** | **1.0.0** | Right-click Mock, typed /mock, or reply /mock; composer review by default. | [Plugin file](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/betterdiscord/plugins/quick-mock/QuickMock.plugin.js) · [Guide](clients/betterdiscord/plugins/quick-mock/README.md) |
+| **Hidden Channels** | **1.0.0** | Locked channel rows and cached metadata, with a channel-info view and unchanged server permissions. | [Plugin file](https://raw.githubusercontent.com/OnlyTripleSix/discord-addons/main/clients/betterdiscord/plugins/hidden-channels/HiddenChannels.plugin.js) · [Guide](clients/betterdiscord/plugins/hidden-channels/README.md) |
 
-Preview and purge selected DMs, channels, or servers. Includes per-target filters, message/reaction scopes, pinned and media protection, OGG preservation, deletion order, adaptive pacing, reports, and account-specific pause/resume checkpoints.
+**Install:** save each .plugin.js file in **Settings → BetterDiscord → Plugins → Open Plugins Folder**, then enable it. Each plugin is independent.
 
-**Install:** save the plugin file in **Settings → BetterDiscord → Plugins → Open Plugins Folder**, then enable **PurgeTools**. Right-click a DM, channel, server, or settings gear and choose **Open Purge Tools**.
-
-[BetterDiscord installation and usage](clients/betterdiscord/plugins/purge-tools/README.md)
+[Mock + Hidden Channels ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/BetterDiscord-Mock-HiddenChannels-1.0.0.zip) · [Purge Tools ZIP](https://github.com/OnlyTripleSix/discord-addons/releases/download/plugins-2026.11.07/PurgeTools-BetterDiscord-1.0.0.zip) · [BetterDiscord installation and usage](clients/betterdiscord/README.md)
 
 ## Valenced
 
